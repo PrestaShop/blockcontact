@@ -115,6 +115,10 @@ class Blockcontact extends Module
 					'title' => $this->l('Settings'),
 					'icon' => 'icon-cogs'
 				),
+				'description' => $this->l('This block displays in the header your phone number (‘Call us now’), and a link to the ‘Contact us’ page.').'<br/>'.
+						$this->l('You should enter your customer service contact details.').'<br/>'.'<br/>'.
+						$this->l('To edit the email addresses for the ‘Contact us’ page: you should go to the ‘Contacts’ page under the ‘Customer’ menu.').'<br/>'.
+						$this->l('To edit the contact details in the footer: you should go to the ‘Contact Information Block’ module.'),
 				'input' => array(
 					array(
 						'type' => 'text',
