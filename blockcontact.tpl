@@ -23,11 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="contact_block" class="block">
-	<h4 class="title_block">{l s='Contact us' mod='blockcontact'}</h4>
-	<div class="block_content clearfix">
-			<p>{l s='Our support hotline is available 24/7.' mod='blockcontact'}</p>
-			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span><span itemprop="telephone"><a href="tel:{$telnumber|escape:'html':'UTF-8'}">{$telnumber|escape:'html':'UTF-8'}</a></span></p>{/if}
-			{if $email != ''}<a href="mailto:{$email|escape:'html':'UTF-8'}" title="{l s='Contact our expert support team!' mod='blockcontact'}">{l s='Contact our expert support team!' mod='blockcontact'}</a>{/if}
+<div class="block-contact">
+	<h4>{l s='Contact us' mod='blockcontact'}</h4>
+	<div class="block-contact-infos">
+		<p>{l s='Our support hotline is available 24/7.' mod='blockcontact'}</p>
+		{if $contact_infos.phone}<p><span>{l s='Phone:' mod='blockcontact'}</span> <span itemprop="telephone"><a href="tel:{$contact_infos.phone}">{$contact_infos.phone}</a></span></p>{/if}
+		{if $contact_infos.email}<p><a href="mailto:{$contact_infos.email}" title="{l s='Contact our expert support team!' mod='blockcontact'}">{l s='Contact our expert support team!' mod='blockcontact'}</a></p>{/if}
 	</div>
 </div>
