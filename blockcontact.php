@@ -50,33 +50,8 @@ class Blockcontact extends Module implements WidgetInterface
     public function install()
     {
         return parent::install()
-            && Configuration::updateValue('BLOCKCONTACT_TELNUMBER', '')
-            && Configuration::updateValue('BLOCKCONTACT_EMAIL', '')
-            && $this->registerHook('displayNav');
-    }
-
-    public function uninstall()
-    {
-        // Delete configuration
-        return Configuration::deleteByName('BLOCKCONTACT_TELNUMBER') && Configuration::deleteByName('BLOCKCONTACT_EMAIL') && parent::uninstall();
-    }
-
-    public function getContent()
-    {
-        $html = '';
-        // If we try to update the settings
-        if (Tools::isSubmit('submitModule'))
-        {
-            Configuration::updateValue('BLOCKCONTACT_TELNUMBER', Tools::getValue('blockcontact_telnumber'));
-            Configuration::updateValue('BLOCKCONTACT_EMAIL', Tools::getValue('blockcontact_email'));
-            $this->_clearCache('blockcontact.tpl');
-            $this->_clearCache('nav.tpl');
-            $html .= $this->displayConfirmation($this->l('Configuration updated'));
-        }
-
-        $html .= $this->renderForm();
-
-        return $html;
+            && $this->registerHook('displayNav')
+            && $this->registerHook('footer');
     }
 
     public function renderWidget($hookName = null, array $configuration = [])
@@ -92,72 +67,26 @@ class Blockcontact extends Module implements WidgetInterface
 
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $contact_infos = array(
-            'phone' => Configuration::get('BLOCKCONTACT_TELNUMBER'),
-            'email' => Configuration::get('BLOCKCONTACT_EMAIL'),
-        );
+        $address = $this->context->shop->getAddress();
+
+        $contact_infos = [
+            'company' => Configuration::get('PS_SHOP_NAME'),
+            'address' => [
+                'formatted' => AddressFormat::generateAddress($address, array(), '<br />'),
+                'address1' => $address->address1,
+                'address2' => $address->address2,
+                'postcode' => $address->postcode,
+                'city' => $address->city,
+                'state' => (new State($address->id_state))->name[$this->context->language->id],
+                'country' => (new Country($address->id_country))->name[$this->context->language->id],
+            ],
+            'phone' => Configuration::get('PS_SHOP_PHONE'),
+            'fax' => Configuration::get('PS_SHOP_FAX'),
+            'email' => Configuration::get('PS_SHOP_EMAIL'),
+        ];
 
         return [
             'contact_infos' => $contact_infos,
         ];
-    }
-
-    public function renderForm()
-    {
-        $fields_form = array(
-            'form' => array(
-                'legend' => array(
-                    'title' => $this->l('Settings'),
-                    'icon' => 'icon-cogs'
-                ),
-                'description' => $this->l('This block displays in the header your phone number (‘Call us now’), and a link to the ‘Contact us’ page.').'<br/><br/>'.
-                        $this->l('To edit the email addresses for the ‘Contact us’ page: you should go to the ‘Contacts’ page under the ‘Customer’ menu.').'<br/>'.
-                        $this->l('To edit the contact details in the footer: you should go to the ‘Contact Information Block’ module.'),
-                'input' => array(
-                    array(
-                        'type' => 'text',
-                        'label' => $this->l('Telephone number'),
-                        'name' => 'blockcontact_telnumber',
-                    ),
-                    array(
-                        'type' => 'text',
-                        'label' => $this->l('Email'),
-                        'name' => 'blockcontact_email',
-                        'desc' => $this->l('Enter here your customer service contact details.'),
-                    ),
-                ),
-                'submit' => array(
-                    'title' => $this->l('Save'),
-                )
-            ),
-        );
-
-        $helper = new HelperForm();
-        $helper->show_toolbar = false;
-        $helper->table =  $this->table;
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
-        $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-        $this->fields_form = array();
-
-        $helper->identifier = $this->identifier;
-        $helper->submit_action = 'submitModule';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->tpl_vars = array(
-            'fields_value' => $this->getConfigFieldsValues(),
-            'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id
-        );
-
-        return $helper->generateForm(array($fields_form));
-    }
-
-    public function getConfigFieldsValues()
-    {
-        return array(
-            'blockcontact_telnumber' => Tools::getValue('blockcontact_telnumber', Configuration::get('BLOCKCONTACT_TELNUMBER')),
-            'blockcontact_email' => Tools::getValue('blockcontact_email', Configuration::get('BLOCKCONTACT_EMAIL')),
-        );
     }
 }

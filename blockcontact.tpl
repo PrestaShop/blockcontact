@@ -25,9 +25,8 @@
 
 <div class="block-contact">
 	<h4>{l s='Contact us' mod='blockcontact'}</h4>
-	<div class="block-contact-infos">
-		<p>{l s='Our support hotline is available 24/7.' mod='blockcontact'}</p>
-		{if $contact_infos.phone}<p><span>{l s='Phone:' mod='blockcontact'}</span> <span itemprop="telephone"><a href="tel:{$contact_infos.phone}">{$contact_infos.phone}</a></span></p>{/if}
-		{if $contact_infos.email}<p><a href="mailto:{$contact_infos.email}" title="{l s='Contact our expert support team!' mod='blockcontact'}">{l s='Contact our expert support team!' mod='blockcontact'}</a></p>{/if}
-	</div>
+    {$contact_infos.address.formatted nofilter}
+    {if $contact_infos.phone}<br>{l s='Tel: %s' sprintf=$contact_infos.phone}{/if}
+    {if $contact_infos.fax}<br>{l s='Fax: %s' sprintf=$contact_infos.fax}{/if}
+    {if $contact_infos.email}<br>{l s='Email: %s' sprintf=$contact_infos.email}{/if}
 </div>
