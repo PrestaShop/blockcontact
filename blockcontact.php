@@ -56,7 +56,7 @@ class Blockcontact extends Module implements WidgetInterface
 
     public function renderWidget($hookName = null, array $configuration = [])
     {
-        $template_file = ($hookName == 'displayNav') ? 'nav.tpl' : 'blockcontact.tpl';
+        $template_file = preg_match('/^displayNav\d*$/', $hookName) ? 'nav.tpl' : 'blockcontact.tpl';
 
         if (!$this->isCached($template_file, $this->getCacheId())) {
             $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
