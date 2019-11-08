@@ -10,5 +10,5 @@ It has been remade for PrestaShop 1.7: https://github.com/PrestaShop/ps_contacti
 
 ## About
 
-Allows you to add additional information about your store\'s customer service in PrestaShop 1.6.
+Allows you to add additional information about your store's customer service in PrestaShop 1.6.
 
